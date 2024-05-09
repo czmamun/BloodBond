@@ -11,10 +11,12 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.text.ParseException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -23,6 +25,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 
 public class BloodBond {
     private JFrame frame;
@@ -381,234 +384,160 @@ public class BloodBond {
         backToHomeButton.setForeground(new Color(239, 35, 60)); // Red text
     }
 
+    private static final int TEXT_FIELD_COLUMNS = 20;
+    private static final int LABEL_WIDTH = 100;
+    private static final int COMPONENT_HEIGHT = 25;
+
     private void initializeSignupPanel() {
-        signupPanel = new JPanel(new GridBagLayout()); // Re-initialize to prevent null references
+        signupPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        JLabel nameLabel = new JLabel("Name:");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        signupPanel.add(nameLabel, gbc);
-
-        JTextField nameField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        signupPanel.add(nameField, gbc);
-
-        JLabel emailLabel = new JLabel("Email:");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        signupPanel.add(emailLabel, gbc);
-
-        JTextField emailField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        signupPanel.add(emailField, gbc);
-
-        JLabel phoneNumberLabel = new JLabel("Phone Number:");
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        signupPanel.add(phoneNumberLabel, gbc);
-
-        JTextField phoneNumberField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        signupPanel.add(phoneNumberField, gbc);
-
-        JLabel ageLabel = new JLabel("Age:");
+        // Create labels and text fields
+        createLabelAndTextField("Name:", gbc, 0, 0);
+        createLabelAndTextField("Email:", gbc, 0, 1);
+        createLabelAndTextField("Phone Number:", gbc, 0, 2);
+        // Date Field
+        JLabel dateOfBirthLabel = new JLabel("Date of birth:");
         gbc.gridx = 0;
         gbc.gridy = 3;
-        signupPanel.add(ageLabel, gbc);
+        signupPanel.add(dateOfBirthLabel, gbc);
 
-        JTextField ageField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        signupPanel.add(ageField, gbc);
+        try {
+            MaskFormatter dateFormatter = new MaskFormatter("##/##/####");
+            dateFormatter.setPlaceholderCharacter('_');
+            JFormattedTextField dateField = new JFormattedTextField(dateFormatter);
+            gbc.gridx = 1;
+            gbc.gridy = 3;
+            signupPanel.add(dateField, gbc);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        createLabelAndTextField("Age:", gbc, 0, 4);
+        // ...
+        // Create combo boxes
+        createComboBox("Gender:", gbc, 0, 5, new String[] { "Male", "Female", "Other" });
+        createComboBox("Blood Group:", gbc, 0, 6, new String[] { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" });
+        // ...
 
-        JLabel genderLabel = new JLabel("Gender:");
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        signupPanel.add(genderLabel, gbc);
+        // Create labels and text fields
+        createLabelAndTextField("Height (Feet):", gbc, 0, 7);
+        createLabelAndTextField("Weight (kg):", gbc, 0, 8);
+        createLabelAndTextField("Address:", gbc, 0, 9);
 
-        String[] genders = { "Male", "Female", "Other" };
-        JComboBox<String> genderComboBox = new JComboBox<>(genders);
-        gbc.gridx = 1;
-        gbc.gridy = 4;
-        signupPanel.add(genderComboBox, gbc);
+        // Create combo boxes
+        createComboBox("Preferred Contact Method:", gbc, 0, 10, new String[] { "Call", "Message", "Email" });
+        createComboBox("Preferred Contact Method:", gbc, 0, 11, new String[] { "Always ready", "Yes", "No", "Later" });
 
-        JLabel heightLabel = new JLabel("Height (ft):");
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        signupPanel.add(heightLabel, gbc);
-
-        JTextField heightField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 5;
-        signupPanel.add(heightField, gbc);
-
-        JLabel weightLabel = new JLabel("Weight (kg):");
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        signupPanel.add(weightLabel, gbc);
-
-        JTextField weightField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 6;
-        signupPanel.add(weightField, gbc);
-
-        JLabel bloodGroupLabel = new JLabel("Blood Group:");
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        signupPanel.add(bloodGroupLabel, gbc);
-
-        String[] bloodGroups = { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" };
-        JComboBox<String> bloodGroupComboBox = new JComboBox<>(bloodGroups);
-        gbc.gridx = 1;
-        gbc.gridy = 7;
-        signupPanel.add(bloodGroupComboBox, gbc);
-
-        JLabel addressLabel = new JLabel("Address:");
-        gbc.gridx = 0;
-        gbc.gridy = 8;
-        signupPanel.add(addressLabel, gbc);
-
-        JTextArea addressField = new JTextArea(5, 20);
-        gbc.gridx = 1;
-        gbc.gridy = 8;
-        signupPanel.add(new JScrollPane(addressField), gbc);
-
-        JLabel preferredContactMethodLabel = new JLabel("Preferred Contact Method:");
-        gbc.gridx = 0;
-        gbc.gridy = 9;
-        signupPanel.add(preferredContactMethodLabel, gbc);
-
-        String[] contactMethods = { "Email", "Phone", "Text Message" };
-        JComboBox<String> contactMethodComboBox = new JComboBox<>(contactMethods);
-        gbc.gridx = 1;
-        gbc.gridy = 9;
-        signupPanel.add(contactMethodComboBox, gbc);
-
-        JLabel availableForDonationLabel = new JLabel("Available for Donation:");
-        gbc.gridx = 0;
-        gbc.gridy = 10;
-        signupPanel.add(availableForDonationLabel, gbc);
-
-        JCheckBox availableForDonationCheckBox = new JCheckBox();
-        gbc.gridx = 1;
-        gbc.gridy = 10;
-        signupPanel.add(availableForDonationCheckBox, gbc);
-
-        JLabel lastDonationDateLabel = new JLabel("Date of Last Donation:");
-        gbc.gridx = 0;
-        gbc.gridy = 11;
-        signupPanel.add(lastDonationDateLabel, gbc);
-
-        JTextField lastDonationDateField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 11;
-        signupPanel.add(lastDonationDateField, gbc);
-
-        JLabel medicalConditionsLabel = new JLabel("Medical Conditions:");
+        // Date Field
+        JLabel lastDonationDate = new JLabel("Last donation date:");
         gbc.gridx = 0;
         gbc.gridy = 12;
-        signupPanel.add(medicalConditionsLabel, gbc);
+        signupPanel.add(lastDonationDate, gbc);
 
-        JTextArea medicalConditionsField = new JTextArea(5, 20);
-        gbc.gridx = 1;
-        gbc.gridy = 12;
-        signupPanel.add(new JScrollPane(medicalConditionsField), gbc);
+        try {
+            MaskFormatter dateFormatter = new MaskFormatter("##/##/####");
+            dateFormatter.setPlaceholderCharacter('_');
+            JFormattedTextField dateField = new JFormattedTextField(dateFormatter);
+            gbc.gridx = 1;
+            gbc.gridy = 12;
+            signupPanel.add(dateField, gbc);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-        JLabel preferredDonationMethodLabel = new JLabel("Preferred Donation Method:");
-        gbc.gridx = 0;
-        gbc.gridy = 13;
-        signupPanel.add(preferredDonationMethodLabel, gbc);
+        // Create labels and text fields
+        createLabelAndTextField("Medical Conditions:", gbc, 0, 13);
+        createLabelAndTextField("Emergency Contact:", gbc, 0, 14);
 
-        String[] donationMethods = { "Whole Blood", "Platelets", "Plasma" };
-        JComboBox<String> donationMethodComboBox = new JComboBox<>(donationMethods);
-        gbc.gridx = 1;
-        gbc.gridy = 13;
-        signupPanel.add(donationMethodComboBox, gbc);
+        // combo box
+        createComboBox("Preferred Donation Method:", gbc, 0, 15, new String[] { "Whole Blood", "Platelets", "Plasma" });
 
-        JLabel healthAndSafetyAgreementsLabel = new JLabel("Health and Safety Agreements:");
-        gbc.gridx = 0;
-        gbc.gridy = 14;
-        signupPanel.add(healthAndSafetyAgreementsLabel, gbc);
-
-        JCheckBox healthAndSafetyAgreementsCheckBox = new JCheckBox();
-        gbc.gridx = 1;
-        gbc.gridy = 14;
-        signupPanel.add(healthAndSafetyAgreementsCheckBox, gbc);
-
-        JLabel volunteerInterestsLabel = new JLabel("Volunteer Interests:");
-        gbc.gridx = 0;
-        gbc.gridy = 15;
-        signupPanel.add(volunteerInterestsLabel, gbc);
-
-        JCheckBox volunteerInterestsCheckBox = new JCheckBox();
-        gbc.gridx = 1;
-        gbc.gridy = 15;
-        signupPanel.add(volunteerInterestsCheckBox, gbc);
-
-        JLabel emergencyContactLabel = new JLabel("Emergency Contact:");
+        // CheckBox
+        JLabel agreeToTermsLabel = new JLabel("I agree to the terms and conditions:");
         gbc.gridx = 0;
         gbc.gridy = 16;
-        signupPanel.add(emergencyContactLabel, gbc);
+        signupPanel.add(agreeToTermsLabel, gbc);
 
-        JTextField emergencyContactField = new JTextField(20);
+        JCheckBox agreeToTermsCheckBox = new JCheckBox();
         gbc.gridx = 1;
         gbc.gridy = 16;
-        signupPanel.add(emergencyContactField, gbc);
+        signupPanel.add(agreeToTermsCheckBox, gbc);
+        //
+        JLabel healthAgreement = new JLabel("Health and Safety Agreements:");
+        gbc.gridx = 0;
+        gbc.gridy = 17;
+        signupPanel.add(healthAgreement, gbc);
 
-        // Set the background color
-        signupPanel.setBackground(new Color(237, 242, 244)); // Light white background
+        JCheckBox healthAgreementCheckbox = new JCheckBox();
+        gbc.gridx = 1;
+        gbc.gridy = 17;
+        signupPanel.add(healthAgreementCheckbox, gbc);
+        //
+        JLabel volunteer = new JLabel("Volunteer Interests:");
+        gbc.gridx = 0;
+        gbc.gridy = 18;
+        signupPanel.add(volunteer, gbc);
 
-        // Set the text color
-        nameLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        nameField.setForeground(new Color(204, 0, 0)); // Dark red text
-        emailLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        emailField.setForeground(new Color(204, 0, 0)); // Dark red text
-        phoneNumberLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        phoneNumberField.setForeground(new Color(204, 0, 0)); // Dark red text
-        ageLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        ageField.setForeground(new Color(204, 0, 0)); // Dark red text
-        genderLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        genderComboBox.setForeground(new Color(204, 0, 0)); // Dark red text
-        heightLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        heightField.setForeground(new Color(204, 0, 0)); // Dark red text
-        weightLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        weightField.setForeground(new Color(204, 0, 0)); // Dark red text
-        bloodGroupLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        bloodGroupComboBox.setForeground(new Color(204, 0, 0)); // Dark red text
-        addressLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        addressField.setForeground(new Color(204, 0, 0)); // Dark red text
-        preferredContactMethodLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        contactMethodComboBox.setForeground(new Color(204, 0, 0)); // Dark red text
-        availableForDonationLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        availableForDonationCheckBox.setForeground(new Color(204, 0, 0)); // Dark red text
-        lastDonationDateLabel.setForeground(new Color(204, 0, 0)); // Darkred text
-        lastDonationDateField.setForeground(new Color(204, 0, 0)); // Dark red text
-        medicalConditionsLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        medicalConditionsField.setForeground(new Color(204, 0, 0)); // Dark red text
-        preferredDonationMethodLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        donationMethodComboBox.setForeground(new Color(204, 0, 0)); // Dark red text
-        healthAndSafetyAgreementsLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        healthAndSafetyAgreementsCheckBox.setForeground(new Color(204, 0, 0)); // Dark red text
-        volunteerInterestsLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        volunteerInterestsCheckBox.setForeground(new Color(204, 0, 0)); // Dark red text
-        emergencyContactLabel.setForeground(new Color(204, 0, 0)); // Dark red text
-        emergencyContactField.setForeground(new Color(204, 0, 0)); // Dark red text
+        JCheckBox volunteerCheckbox = new JCheckBox();
+        gbc.gridx = 1;
+        gbc.gridy = 18;
+        signupPanel.add(volunteerCheckbox, gbc);
 
+        // Create buttons
         JButton signupSubmitButton = new JButton("SignUp");
         gbc.gridx = 1;
-        gbc.gridy = 2;
-        loginPanel.add(signupSubmitButton, gbc);
+        gbc.gridy = 19;
+        gbc.anchor = GridBagConstraints.EAST;
+        signupPanel.add(signupSubmitButton, gbc);
+
         JButton backToHomeButton = new JButton("Back to Home");
         backToHomeButton.addActionListener(e -> showPanel("home"));
         gbc.gridx = 1;
-        gbc.gridy = 3;
-        loginPanel.add(backToHomeButton, gbc);
+        gbc.gridy = 20;
+        gbc.anchor = GridBagConstraints.EAST;
+        signupPanel.add(backToHomeButton, gbc);
 
+        // Set background and text colors
+        signupPanel.setBackground(new Color(237, 242, 244));
+        setComponentForegroundColor(new Color(204, 0, 0), signupPanel);
+    }
+
+    private void createLabelAndTextField(String label, GridBagConstraints gbc, int x, int y) {
+        JLabel jLabel = new JLabel(label);
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.anchor = GridBagConstraints.WEST;
+        signupPanel.add(jLabel, gbc);
+
+        JTextField jTextField = new JTextField(TEXT_FIELD_COLUMNS);
+        jTextField.setPreferredSize(new Dimension(250, 30)); // Set preferred size
+        gbc.gridx = x + 1;
+        gbc.gridy = y;
+        gbc.anchor = GridBagConstraints.WEST;
+        signupPanel.add(jTextField, gbc);
+    }
+
+    private void createComboBox(String label, GridBagConstraints gbc, int x, int y, String[] options) {
+        JLabel jLabel = new JLabel(label);
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.anchor = GridBagConstraints.WEST;
+        signupPanel.add(jLabel, gbc);
+
+        JComboBox<String> jComboBox = new JComboBox<>(options);
+        gbc.gridx = x + 1;
+        gbc.gridy = y;
+        gbc.anchor = GridBagConstraints.WEST;
+        signupPanel.add(jComboBox, gbc);
+    }
+
+    private void setComponentForegroundColor(Color color, Container container) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JLabel || component instanceof JTextField || component instanceof JComboBox) {
+                component.setForeground(color);
+            }
+        }
     }
 
     private void showPanel(String panelName) {
