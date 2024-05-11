@@ -1,5 +1,4 @@
-
-/*After updating your provided code some other errors is appeared. I am given the error massage at the end of the code block.*/
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -12,7 +11,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.text.ParseException;
+
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -28,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 public class BloodBond {
+
     private JFrame frame;
     private JPanel homePanel;
     private JPanel loginPanel;
@@ -206,6 +208,55 @@ public class BloodBond {
             }
         });
 
+        // Find blood panel
+        JPanel findBloodPanel = new JPanel();
+        findBloodPanel.setLayout(new FlowLayout()); // You can choose a different layout if needed
+        leftPanel.add(findBloodPanel); // Add findBloodPanel to the rightPanel
+
+        // Initially set findBloodPanel to invisible
+        findBloodPanel.setVisible(false);
+
+        // Add findBloodPanel to the main frame
+        frame.add(findBloodPanel, BorderLayout.EAST); // Adjust the layout as needed
+
+        // Create the blood group combo box
+        String[] bloodGroups = { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" };
+        JComboBox<String> bloodGroupComboBox = new JComboBox<>(bloodGroups);
+
+        // Create the search icon (you can use any icon you like)
+        ImageIcon searchIcon = new ImageIcon("16x16.png");
+        JButton searchButton = new JButton(searchIcon);
+
+        // Add the combo box and search button to the panel
+        findBloodPanel.add(bloodGroupComboBox);
+        findBloodPanel.add(searchButton);
+
+        searchButton.addActionListener(e -> {
+            // Get the selected blood group
+            String selectedBloodGroup = (String) bloodGroupComboBox.getSelectedItem();
+            // Fetch live location of donors based on the selected blood group
+            // Update the map with donor locations (using Google Maps API)
+            // Usage example:
+            String apiKey = "AIzaSyAa2Btly3x1sfLRthTbIILcfClMov59_ko";
+            LocationService locationService = new LocationService(apiKey);
+            locationService.getAddressCoordinates("1600 Amphitheatre Parkway, Mountain View, CA");
+
+            // Other methods and components of your class..
+        });
+
+        // Action listener for the findBloodButton
+        findBloodButton.addActionListener(e -> {
+            // Toggle the visibility of findBloodPanel
+            findBloodPanel.setVisible(!findBloodPanel.isVisible());
+            frame.revalidate();
+            frame.repaint();
+        });
+
+        // Refresh the frame to update UI
+        frame.revalidate();
+        frame.repaint();
+
+        // login panel
         JPanel loginSignupPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         loginSignupPanel.add(loginButton);
         loginSignupPanel.add(signUpButton);
@@ -384,19 +435,20 @@ public class BloodBond {
         backToHomeButton.setForeground(new Color(239, 35, 60)); // Red text
     }
 
-    private static final int TEXT_FIELD_COLUMNS = 20;
-    private static final int LABEL_WIDTH = 100;
-    private static final int COMPONENT_HEIGHT = 25;
-
     private void initializeSignupPanel() {
+
         signupPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
+        int TEXT_FIELD_COLUMNS = 20;
+        int LABEL_WIDTH = 100;
+        int COMPONENT_HEIGHT = 25;
+
         // Create labels and text fields
-        createLabelAndTextField("Name:", gbc, 0, 0);
-        createLabelAndTextField("Email:", gbc, 0, 1);
-        createLabelAndTextField("Phone Number:", gbc, 0, 2);
+        createLabelAndTextField("Name:", gbc, 0, 0, TEXT_FIELD_COLUMNS);
+        createLabelAndTextField("Email:", gbc, 0, 1, TEXT_FIELD_COLUMNS);
+        createLabelAndTextField("Phone Number:", gbc, 0, 2, TEXT_FIELD_COLUMNS);
         // Date Field
         JLabel dateOfBirthLabel = new JLabel("Date of birth:");
         gbc.gridx = 0;
@@ -413,7 +465,7 @@ public class BloodBond {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        createLabelAndTextField("Age:", gbc, 0, 4);
+        createLabelAndTextField("Age:", gbc, 0, 4, TEXT_FIELD_COLUMNS);
         // ...
         // Create combo boxes
         createComboBox("Gender:", gbc, 0, 5, new String[] { "Male", "Female", "Other" });
@@ -421,9 +473,9 @@ public class BloodBond {
         // ...
 
         // Create labels and text fields
-        createLabelAndTextField("Height (Feet):", gbc, 0, 7);
-        createLabelAndTextField("Weight (kg):", gbc, 0, 8);
-        createLabelAndTextField("Address:", gbc, 0, 9);
+        createLabelAndTextField("Height (Feet):", gbc, 0, 7, TEXT_FIELD_COLUMNS);
+        createLabelAndTextField("Weight (kg):", gbc, 0, 8, TEXT_FIELD_COLUMNS);
+        createLabelAndTextField("Address:", gbc, 0, 9, TEXT_FIELD_COLUMNS);
 
         // Create combo boxes
         createComboBox("Preferred Contact Method:", gbc, 0, 10, new String[] { "Call", "Message", "Email" });
@@ -447,8 +499,8 @@ public class BloodBond {
         }
 
         // Create labels and text fields
-        createLabelAndTextField("Medical Conditions:", gbc, 0, 13);
-        createLabelAndTextField("Emergency Contact:", gbc, 0, 14);
+        createLabelAndTextField("Medical Conditions:", gbc, 0, 13, TEXT_FIELD_COLUMNS);
+        createLabelAndTextField("Emergency Contact:", gbc, 0, 14, TEXT_FIELD_COLUMNS);
 
         // combo box
         createComboBox("Preferred Donation Method:", gbc, 0, 15, new String[] { "Whole Blood", "Platelets", "Plasma" });
@@ -503,7 +555,7 @@ public class BloodBond {
         setComponentForegroundColor(new Color(204, 0, 0), signupPanel);
     }
 
-    private void createLabelAndTextField(String label, GridBagConstraints gbc, int x, int y) {
+    private void createLabelAndTextField(String label, GridBagConstraints gbc, int x, int y, int TEXT_FIELD_COLUMNS) {
         JLabel jLabel = new JLabel(label);
         gbc.gridx = x;
         gbc.gridy = y;
@@ -545,9 +597,3 @@ public class BloodBond {
         cl.show(frame.getContentPane(), panelName);
     }
 }
-
-// Errors showing after run
-/*
- * Error: Could not find or load main class tempCodeRunnerFile
- * Caused by: java.lang.ClassNotFoundException: tempCodeRunnerFile
- */
